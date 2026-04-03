@@ -1,0 +1,155 @@
+---
+title: "Security & compliance"
+description: "Zero-trust security built into every layer of WinDesk Cloud"
+keywords: ["zero trust", "encryption", "compliance", "SOC 2", "GDPR", "HIPAA", "MFA", "SSO", "RBAC"]
+---
+
+WinDesk Cloud is built on the NeoSC zero-trust network, which treats every access request as untrusted until cryptographic identity and policy checks pass. Security is not a configuration layer added on top — it is the foundation the platform is built on.
+
+## Security pillars
+
+### 1. Zero trust architecture
+
+Traditional network security draws a perimeter and trusts everything inside it. NeoSC takes the opposite approach: no user, device, or service is trusted by default, regardless of network location.
+
+Every connection goes through the following steps:
+
+1. **Cryptographic identity verification** — each user and device holds a short-lived cryptographic certificate issued by the NeoSC Control Plane. Connections are refused if the certificate is missing, expired, or revoked.
+2. **Policy evaluation** — after identity is confirmed, NeoSC evaluates the access policy for the requested resource in real time. Policies are expressed as group-to-resource mappings (for example, `group: dev team` may access `group: dev infra`, while `group: sales team` is blocked from the same resources).
+3. **Ephemeral privileges** — access grants are scoped to the session and expire automatically. There are no standing permissions or persistent VPN tunnels that could be exploited after a credential is compromised.
+4. **Continuous verification** — identity and policy checks run throughout the session, not only at login. A session is terminated immediately if the user's certificate is revoked or policy changes mid-session.
+
+<Info>
+  NeoSC establishes direct peer-to-peer tunnels between verified endpoints. The Control Plane coordinates identity and policy but does not sit in the data path, eliminating a central point of failure and reducing latency.
+</Info>
+
+### 2. Encryption
+
+All data is encrypted at every stage:
+
+| Layer | Standard | Details |
+|---|---|---|
+| Data in transit | TLS 1.3 | All browser-to-platform sessions use TLS 1.3 with forward secrecy |
+| NeoSC tunnel | TLS 1.3 | An additional encryption layer wraps traffic inside the zero-trust overlay |
+| Data at rest | AES-256 | Desktop VM disks and backup snapshots encrypted at the block level |
+| Backup encryption | AES-256 | Backups stored in geo-redundant storage with independent encryption keys |
+
+<Note>
+  Enterprise customers can bring their own encryption keys (BYOK) for data at rest. Key material never leaves the customer's key management service.
+</Note>
+
+End-to-end encryption means that the data path from the user's browser to the Windows desktop VM is encrypted with keys that are not accessible to WinDesk Cloud support staff or infrastructure operators.
+
+### 3. Compliance
+
+WinDesk Cloud is designed to help organizations meet their regulatory obligations. Compliance controls are built into the platform architecture and audited annually by independent third parties.
+
+<CardGroup cols={2}>
+  <Card title="SOC 2 Type II" icon="shield-check">
+    Annual audit covering security, availability, and confidentiality controls across the WinDesk Cloud production environment. Reports are available under NDA to Business and Enterprise customers.
+  </Card>
+  <Card title="ISO 27001" icon="shield-check">
+    Certified information security management system (ISMS) covering risk assessment, asset management, access control, cryptography, and incident response.
+  </Card>
+  <Card title="GDPR" icon="shield-check">
+    Data processing agreements (DPAs) are available for all customers. WinDesk Cloud acts as a data processor and provides the controls required for customers to meet their own GDPR obligations as data controllers.
+  </Card>
+  <Card title="HIPAA" icon="shield-check">
+    Business Associate Agreements (BAAs) are available for Enterprise customers. The platform supports HIPAA-required controls including access logging, encryption, and automatic session timeouts.
+  </Card>
+  <Card title="FedRAMP" icon="shield-check">
+    Federal Risk and Authorization Management Program authorization for US federal agency deployments. Contact the Enterprise sales team for authorization package details.
+  </Card>
+  <Card title="PCI DSS" icon="shield-check">
+    Payment Card Industry Data Security Standard compliance for customers processing cardholder data. Network segmentation and access controls are scoped to meet PCI DSS requirements.
+  </Card>
+</CardGroup>
+
+<Warning>
+  Compliance certifications apply to the WinDesk Cloud platform infrastructure. Customers are responsible for configuring their own desktops and applications in accordance with applicable standards. Contact your account manager for a shared responsibility matrix.
+</Warning>
+
+### 4. Monitoring & audit
+
+All activity on the platform is logged and available for audit:
+
+- **Real-time audit logs** — every authentication event, session start, policy change, and admin action is written to an immutable audit log with a cryptographic chain of custody. Logs are available in the admin dashboard and via API.
+- **Session recording** — administrators can enable session recording for any desktop or group. Recordings capture screen content and input events for forensic review. Recordings are encrypted and stored according to the plan's retention policy.
+- **Threat detection** — the platform continuously monitors session behavior and access patterns for anomalies. Suspicious activity — such as logins from unexpected locations, unusually high data transfer, or access outside normal working hours — triggers alerts and can automatically suspend the session.
+
+## Advanced security features
+
+<AccordionGroup>
+  <Accordion title="Multi-factor authentication (MFA)">
+    MFA can be required for all users or specific groups. Supported second factors include TOTP authenticator apps (Google Authenticator, Authy, 1Password), hardware security keys (FIDO2 / WebAuthn), and push notifications via supported identity providers. MFA enforcement is controlled by policy and cannot be bypassed by individual users.
+  </Accordion>
+  <Accordion title="Single sign-on (SSO)">
+    WinDesk Cloud integrates with all major identity providers using SAML 2.0 and OIDC:
+
+    - Okta
+    - Microsoft Azure Active Directory (Azure AD / Entra ID)
+    - Google Workspace
+    - Any SAML 2.0-compliant identity provider
+    - Any OIDC-compliant identity provider
+
+    SSO is available on Business and Enterprise plans. When SSO is configured, users authenticate through your identity provider and WinDesk Cloud trusts the resulting identity assertion, enabling centralized access control and automatic deprovisioning when users are removed from your IdP.
+  </Accordion>
+  <Accordion title="Role-based access control (RBAC)">
+    Administrators can define roles with granular permissions and assign them to users or groups. Predefined roles include:
+
+    - **Owner** — full administrative access including billing and plan management
+    - **Admin** — manage desktops, users, and policies; no access to billing
+    - **Support** — view-only access to monitoring and audit logs; can restart sessions
+    - **User** — access to assigned desktops only
+
+    Custom roles with arbitrary permission sets are available on Enterprise plans.
+  </Accordion>
+  <Accordion title="Network segmentation">
+    NeoSC enforces network segmentation at the policy layer without requiring separate VLANs or firewall rules. Access policies define which user groups can reach which resource groups:
+
+    - Dev team members can access dev infrastructure servers
+    - Sales team members are blocked from dev infrastructure automatically
+    - Segmentation is enforced cryptographically — it cannot be bypassed by routing or ARP manipulation
+
+    This model replicates the security properties of network isolation without the operational complexity of managing physical or virtual network boundaries.
+  </Accordion>
+  <Accordion title="Threat detection">
+    The platform uses behavioral analysis to detect threats that signature-based systems miss:
+
+    - Anomalous login locations or times compared to historical baselines
+    - Unusual data access volume or transfer rate
+    - Credential stuffing and brute-force patterns
+    - Lateral movement attempts within the network overlay
+
+    Detected threats generate alerts in the admin dashboard and can be configured to automatically suspend the affected session or lock the user account pending review.
+  </Accordion>
+  <Accordion title="Incident response">
+    WinDesk Cloud provides automated and manual incident response capabilities:
+
+    - **Automatic session suspension** — policy-triggered suspension on anomaly detection
+    - **One-click lockout** — administrators can immediately revoke all active sessions and credentials for a user from the admin dashboard or API
+    - **Certificate revocation** — NeoSC certificates are revoked instantly; the user cannot reconnect until a new certificate is issued
+    - **Forensic export** — audit logs and session recordings for the affected account can be exported in standard formats for investigation or legal hold
+
+    Enterprise plans include a dedicated security incident response SLA with a committed acknowledgment time for severity-1 incidents.
+  </Accordion>
+</AccordionGroup>
+
+## Security configuration reference
+
+The following settings are available in the admin dashboard under **Settings → Security**:
+
+| Setting | Default | Plans |
+|---|---|---|
+| Require MFA for all users | Off | All |
+| SSO provider | None | Business, Enterprise |
+| Session timeout (idle) | 30 minutes | All |
+| Session recording | Off | Business, Enterprise |
+| Audit log retention | 90 days | All |
+| Threat detection alerts | Email | Business, Enterprise |
+| Automatic session suspension | Off | Enterprise |
+| BYOK encryption | Off | Enterprise |
+
+<Tip>
+  Enable session recording and threat detection alerts as a baseline for any production deployment. These two controls together significantly reduce the mean time to detect (MTTD) for unauthorized access.
+</Tip>

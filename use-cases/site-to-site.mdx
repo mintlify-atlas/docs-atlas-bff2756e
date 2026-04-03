@@ -1,0 +1,112 @@
+---
+title: "Site-to-site VPN"
+description: "Connect office locations and data centers with high-performance encrypted tunnels — no MPLS circuits, no gateway appliances, no weeks-long provisioning."
+keywords: ["site-to-site VPN", "MPLS replacement", "multi-site networking", "branch connectivity", "encrypted tunnels"]
+---
+
+Establish secure, high-performance connections between office locations, data centers, and cloud environments without the cost and complexity of traditional WAN infrastructure. NeoSC builds automatic peer-to-peer tunnels between sites, eliminating the need for MPLS circuits, VPN appliances, and the network engineers to manage them.
+
+## Real-world scenario: Multi-Site Enterprise
+
+A financial services company operates offices in New York, London, and Singapore with databases and applications distributed across all three locations. Connecting these sites through traditional MPLS circuits was expensive, slow to expand, and required specialized expertise to maintain.
+
+### Challenge
+
+Three problems made the existing setup unsustainable:
+
+- **Cost** — MPLS circuits across three continents exceeded $50,000 per year, plus the overhead of dedicated network engineering staff
+- **Speed to expand** — adding a new site or relocating an office took several weeks of coordination with carriers and engineers
+- **Operational burden** — every firewall rule change, routing update, or failover test required manual intervention
+
+### Solution
+
+NeoSC replaced the MPLS infrastructure with automatic peer-to-peer tunnels between each site. The tunnels are established and maintained by the NeoSC agent deployed at each location — no appliances to rack, no carrier provisioning windows, no manual routing tables. Firewall policies are configured in the WinDesk Cloud console and pushed to all sites simultaneously.
+
+<Note>
+  NeoSC peer-to-peer tunnels are encrypted end-to-end and establish direct paths between sites, bypassing the latency overhead of hub-and-spoke VPN architectures.
+</Note>
+
+### Results
+
+| Metric | Before | After |
+|---|---|---|
+| Annual infrastructure cost | $50,000+ | ~$10,000 (80% reduction) |
+| Cost savings vs. prior year | — | $40,000 |
+| New site onboarding | 2 weeks | 2 hours |
+| Network latency | Baseline | 40% reduction |
+| Uptime | Variable | 99.99% with automatic failover |
+
+## How to connect sites with NeoSC
+
+<Steps>
+  <Step title="Deploy the NeoSC site agent at each location">
+    Install the NeoSC site agent on a host at each office or data center. The agent can run on a Linux VM, a Windows Server instance, or a dedicated appliance. It does not require a public IP address.
+  </Step>
+  <Step title="Register each site in the WinDesk Cloud console">
+    Add each location as a site in the console and specify the subnets that should be reachable from other sites. NeoSC uses this information to build routing rules automatically.
+
+    <Tip>
+      Use descriptive site names that match your internal naming conventions (e.g., `nyc-hq`, `lon-office`, `sgp-dc`). These names appear in logs and policy rules.
+    </Tip>
+  </Step>
+  <Step title="Configure site-to-site access policies">
+    Define which sites can communicate with each other and which subnets are exposed. Policies are evaluated per connection, so you can allow broad inter-site access or restrict specific port and protocol combinations.
+  </Step>
+  <Step title="Enable redundant connections">
+    For each site pair, NeoSC can maintain multiple simultaneous tunnels over different network paths. Enable redundancy in the site settings to activate automatic failover if a path becomes unavailable.
+  </Step>
+  <Step title="Verify routing and test connectivity">
+    Use the built-in connectivity tester in the console to verify that expected paths are active and that firewall policies are behaving as intended. NeoSC shows the active tunnel path and round-trip latency for each site pair.
+  </Step>
+</Steps>
+
+## Key benefits
+
+<CardGroup cols={2}>
+  <Card title="High performance" icon="bolt">
+    Direct peer-to-peer tunnels between sites eliminate the gateway bottleneck of traditional hub-and-spoke VPN architectures. Traffic travels the shortest available path.
+  </Card>
+  <Card title="Simplified management" icon="sliders">
+    No complex firewall rules, no VPN gateway configuration, no carrier coordination. Site connectivity is managed from a single console with a unified policy model.
+  </Card>
+  <Card title="Cost effective" icon="circle-dollar-sign">
+    Eliminate expensive MPLS circuits and VPN appliances. The financial services company in this scenario reduced annual infrastructure costs by $40,000 — an 80% reduction.
+  </Card>
+  <Card title="Automatic failover" icon="arrows-rotate">
+    NeoSC maintains redundant connections between sites and automatically reroutes traffic when a path fails. The financial services example achieved 99.99% uptime without manual intervention.
+  </Card>
+</CardGroup>
+
+## Key features
+
+- **Automatic peer-to-peer site connectivity** — tunnels are established and maintained without manual configuration
+- **No VPN gateway required** — eliminates the cost and single-point-of-failure risk of centralized appliances
+- **Redundant connections for high availability** — multiple simultaneous paths with automatic failover
+- **Automatic network routing** — NeoSC builds and maintains routing tables based on registered site subnets
+- **Integrated firewall policies** — define access rules in the console and push them to all sites simultaneously
+
+<AccordionGroup>
+  <Accordion title="Does NeoSC require a public IP at each site?" icon="circle-question">
+    No. The NeoSC site agent uses outbound connections to establish tunnels, so sites behind NAT or dynamic IP addresses are supported. This is particularly useful for branch offices and remote facilities that do not have static public addresses.
+  </Accordion>
+  <Accordion title="How does automatic failover work?" icon="circle-question">
+    NeoSC maintains multiple tunnel paths between each site pair. If the primary path becomes unavailable — due to a carrier outage, routing change, or packet loss threshold — traffic is automatically rerouted over the next available path. Failover typically completes in under five seconds. No manual intervention or reconfiguration is required.
+  </Accordion>
+  <Accordion title="Can I connect cloud environments as sites?" icon="circle-question">
+    Yes. NeoSC supports AWS VPCs, Azure VNets, and GCP VPCs as first-class site types. Deploy the NeoSC agent on a VM in each cloud environment and register it as a site. Traffic between cloud environments and on-premises offices uses the same peer-to-peer tunnel infrastructure.
+  </Accordion>
+  <Accordion title="How are firewall policies applied across sites?" icon="circle-question">
+    Policies are defined centrally in the WinDesk Cloud console and pushed to all site agents automatically. You can write rules that apply to all sites, to specific site pairs, or to individual subnets within a site. Changes take effect within seconds of being saved.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Access policies" icon="shield" href="/guides/access-policies">
+    Configure firewall rules and access policies to control exactly which traffic is permitted between connected sites.
+  </Card>
+  <Card title="Secure remote access" icon="users" href="/use-cases/remote-access">
+    Extend zero-trust access to individual users and devices, not just fixed sites.
+  </Card>
+</CardGroup>

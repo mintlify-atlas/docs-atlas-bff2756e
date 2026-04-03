@@ -1,0 +1,188 @@
+---
+title: "Platform features"
+description: "Comprehensive features for enterprise virtual desktop deployments"
+keywords: ["virtual desktop features", "VDI", "vCPU", "monitoring", "backups", "auto-scaling", "API"]
+---
+
+WinDesk Cloud provides a complete set of capabilities for deploying, managing, and securing virtual Windows desktops at any scale. Features are organized across three plans — Starter, Business, and Enterprise — with every plan including the core desktop infrastructure and zero-trust network security.
+
+## Compute resources
+
+Each desktop is a dedicated virtual machine with configurable CPU, memory, and storage. Resources are not shared between users.
+
+| Resource | Starter | Business | Enterprise |
+|---|---|---|---|
+| Max vCPU cores | 4 | 8 | 16 |
+| Max RAM per desktop | 16 GB | 32 GB | 64 GB |
+| Max storage per desktop | 100 GB | 250 GB | 500 GB |
+| Total users | 5 | 25 | Unlimited |
+| Concurrent sessions | 2 | 5 | Unlimited |
+
+<Tip>
+  If your workloads require more than 16 vCPU or 64 GB RAM per desktop, contact the Enterprise sales team to discuss dedicated bare-metal options.
+</Tip>
+
+## Management & administration
+
+### Admin dashboard
+
+All plans include a web-based admin dashboard for managing desktops, users, and access policies. From the dashboard you can provision new desktops, modify resource allocations, reset user sessions, and review audit activity.
+
+### Real-time monitoring
+
+The monitoring dashboard displays live performance metrics for every desktop in your fleet:
+
+- CPU utilization (per core and aggregate)
+- Memory usage and swap activity
+- Disk I/O throughput and latency
+- Network bandwidth consumption
+- Active session count and connection quality
+
+Metrics are refreshed continuously and retained for trend analysis according to your plan's retention policy.
+
+### Advanced analytics
+
+<Tabs>
+  <Tab title="Business">
+    Business plans include historical analytics with 90-day data retention. You can identify usage trends, detect underutilized desktops, and generate reports for capacity planning.
+  </Tab>
+  <Tab title="Enterprise">
+    Enterprise plans add custom dashboards, exportable reports, and integration with external observability platforms via webhook or API. Data retention extends to one year.
+  </Tab>
+</Tabs>
+
+### API access
+
+The WinDesk Cloud REST API lets you automate desktop lifecycle management, integrate provisioning into your own tooling, and pull metrics into external systems.
+
+<Note>
+  API access is available on Business and Enterprise plans. Starter plan users can manage desktops through the admin dashboard only.
+</Note>
+
+```bash
+# Example: list all desktops in your organization
+curl -X GET https://api.windeskcloud.com/v1/desktops \
+  -H "Authorization: Bearer $WINDESKCLOUD_API_TOKEN"
+```
+
+### Bulk operations
+
+Business and Enterprise plans support bulk operations from the admin dashboard and API:
+
+- Provision multiple desktops from a template in a single request
+- Apply policy or configuration changes across a fleet simultaneously
+- Restart, shutdown, or snapshot a group of desktops at once
+
+### Custom branding
+
+<Note>
+  Custom branding is available on Enterprise plans only.
+</Note>
+
+Enterprise customers can replace WinDesk Cloud's default portal UI with their own logo, color scheme, and domain name. Users see a fully white-labeled experience with no WinDesk Cloud branding.
+
+## Backup & recovery
+
+All plans include automated backups. Backup frequency, retention, and recovery capabilities vary by plan.
+
+| Capability | Starter | Business | Enterprise |
+|---|---|---|---|
+| Automated backups | Yes | Yes | Yes |
+| Backup retention | 7 days | 30 days | 90 days |
+| Disaster recovery | No | Yes | Yes |
+| Point-in-time recovery | No | Yes | Yes |
+| Multi-region replication | No | No | Yes |
+
+<AccordionGroup>
+  <Accordion title="Automated backups">
+    Backups run daily and are stored in geo-redundant object storage. Each backup captures the full disk state of the desktop VM, including the OS, installed applications, and user data. Backups are encrypted at rest using AES-256.
+  </Accordion>
+  <Accordion title="Disaster recovery">
+    Business and Enterprise plans include a managed disaster recovery service. In the event of a regional outage, affected desktops are automatically restored from the most recent backup in a healthy region. RTO is under 4 hours for Business plans and under 1 hour for Enterprise plans.
+  </Accordion>
+  <Accordion title="Point-in-time recovery">
+    Business and Enterprise customers can restore a desktop to any backup snapshot within the retention window. This is useful for recovering from accidental file deletion, ransomware, or misconfiguration without rolling back the entire fleet.
+  </Accordion>
+  <Accordion title="Multi-region replication">
+    Enterprise plans continuously replicate desktop data to a secondary region. This provides near-zero RPO for critical workloads and enables active-passive failover between regions.
+  </Accordion>
+</AccordionGroup>
+
+## Auto-scaling
+
+WinDesk Cloud monitors aggregate demand across your fleet and adjusts resource allocation automatically:
+
+- Desktops that are idle for a configurable period are suspended to reduce cost
+- New desktops can be provisioned automatically from a template when demand exceeds capacity
+- Resource limits (CPU and RAM) can be adjusted without restarting the desktop session
+
+<Warning>
+  Auto-scaling policies create and destroy desktop instances. Make sure users save work to a network drive or cloud storage that persists across desktop lifecycle events before enabling aggressive scale-down policies.
+</Warning>
+
+## Encryption & security
+
+End-to-end encryption is included on all plans:
+
+- **Data in transit** — all sessions use TLS 1.3. The NeoSC network overlay adds an additional layer of encryption on the tunnel between the user's browser and the desktop VM.
+- **Data at rest** — desktop VM disks and backup snapshots are encrypted using AES-256. Encryption keys are managed by WinDesk Cloud's key management service; Enterprise customers can bring their own keys (BYOK).
+
+See [Security & compliance](/platform/security) for a full description of the security architecture.
+
+## Full plan comparison
+
+### Resources & capacity
+
+| Feature | Starter | Business | Enterprise |
+|---|---|---|---|
+| Max vCPU cores | 4 | 8 | 16 |
+| Max RAM per desktop | 16 GB | 32 GB | 64 GB |
+| Max storage per desktop | 100 GB | 250 GB | 500 GB |
+| Total users | 5 | 25 | Unlimited |
+| Concurrent sessions | 2 | 5 | Unlimited |
+| SLA uptime guarantee | 99.5% | 99.9% | 99.99% |
+
+### Management & administration
+
+| Feature | Starter | Business | Enterprise |
+|---|---|---|---|
+| Admin dashboard | Yes | Yes | Yes |
+| Real-time monitoring | Yes | Yes | Yes |
+| Advanced analytics | No | Yes | Yes |
+| API access | No | Yes | Yes |
+| Bulk operations | No | Yes | Yes |
+| Custom branding | No | No | Yes |
+
+### Security & compliance
+
+| Feature | Starter | Business | Enterprise |
+|---|---|---|---|
+| End-to-end encryption | Yes | Yes | Yes |
+| Zero trust architecture | Yes | Yes | Yes |
+| Advanced SSO (SAML / OIDC) | No | Yes | Yes |
+| Private relay network | No | Yes | Yes |
+| Compliance audit logs | No | Yes | Yes |
+| Security suite (MFA, DLP) | No | No | Yes |
+| SOC 2 Type II certified | No | Yes | Yes |
+
+### Backup & recovery
+
+| Feature | Starter | Business | Enterprise |
+|---|---|---|---|
+| Automated backups | Yes | Yes | Yes |
+| Backup retention | 7 days | 30 days | 90 days |
+| Disaster recovery | No | Yes | Yes |
+| Point-in-time recovery | No | Yes | Yes |
+| Multi-region replication | No | No | Yes |
+
+### Support
+
+| Feature | Starter | Business | Enterprise |
+|---|---|---|---|
+| Email support | Yes | Yes | Yes |
+| Community forum access | Yes | Yes | Yes |
+| Priority support | No | Yes | Yes |
+| Phone support | No | No | Yes |
+| Dedicated account manager | No | No | Yes |
+| 24/7 support | No | No | Yes |
+| SLA guarantee | 99.5% | 99.9% | 99.99% |

@@ -1,0 +1,122 @@
+---
+title: "Identity providers"
+description: Connect NeoSC to your existing SSO provider for centralized authentication.
+---
+
+NeoSC integrates with your organization's identity provider (IdP) so users authenticate through your existing SSO infrastructure. Supported providers include:
+
+- Okta
+- Azure AD / Microsoft Entra ID
+- Google Workspace
+- Auth0
+- Keycloak
+- Generic OIDC
+
+<Note>
+  Generic OIDC works with any OpenID Connect-compatible provider, including self-hosted or custom identity systems.
+</Note>
+
+## General configuration
+
+<Steps>
+  <Step title="Open identity provider settings">
+    In the NeoSC dashboard, go to **Settings → Identity Providers**.
+  </Step>
+
+  <Step title="Add a provider">
+    Click **Add Provider** and select your provider type from the list.
+  </Step>
+
+  <Step title="Fill in the required fields">
+    Depending on your provider, you will need to supply:
+
+    - **Client ID** — the application identifier from your IdP
+    - **Client Secret** — the corresponding secret credential
+    - **Discovery URL** — the OpenID Connect discovery endpoint (required for OIDC-based providers)
+  </Step>
+
+  <Step title="Test the connection">
+    Click **Test Connection** to verify the credentials before saving.
+
+    <Tip>
+      Always test the connection before saving. An incorrect configuration can prevent users from logging in. If you are the only admin, a misconfigured IdP can lock you out of the dashboard.
+    </Tip>
+  </Step>
+
+  <Step title="Save the configuration">
+    Click **Save** to activate the identity provider. Users will be redirected to your IdP at next login.
+  </Step>
+</Steps>
+
+## Provider configuration
+
+<Tabs>
+  <Tab title="Okta">
+    In your Okta admin console, create an OIDC application and note the Client ID, Client Secret, and your Okta domain.
+
+    ```text okta-example.conf
+    Provider: Okta
+    Client ID: 0oa1234567890abcdef
+    Client Secret: [your-client-secret]
+    Discovery URL: https://your-domain.okta.com/.well-known/openid-configuration
+    ```
+
+    Set the **Sign-in redirect URI** in Okta to:
+
+    ```text
+    https://localhost:8080/auth/callback
+    ```
+
+    Assign the NeoSC application to the users or groups that should have access.
+  </Tab>
+
+  <Tab title="Azure AD">
+    In the Azure portal, register a new application under **Azure Active Directory → App registrations**.
+
+    ```text azure-ad-example.conf
+    Provider: Azure AD / Microsoft Entra ID
+    Client ID: [application-client-id]
+    Client Secret: [client-secret-value]
+    Discovery URL: https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration
+    ```
+
+    Replace `{tenant-id}` with your Azure AD tenant ID. Grant the application the `openid`, `profile`, and `email` scopes. Add your NeoSC callback URL under **Authentication → Redirect URIs**.
+  </Tab>
+
+  <Tab title="Google Workspace">
+    In the Google Cloud console, create an OAuth 2.0 client ID under **APIs & Services → Credentials**.
+
+    ```text google-workspace-example.conf
+    Provider: Google Workspace
+    Client ID: [your-client-id].apps.googleusercontent.com
+    Client Secret: [your-client-secret]
+    Discovery URL: https://accounts.google.com/.well-known/openid-configuration
+    ```
+
+    Restrict access to your organization's domain by setting the **Authorized domains** field in the OAuth consent screen. Add your NeoSC callback URL under **Authorized redirect URIs**.
+  </Tab>
+
+  <Tab title="Generic OIDC">
+    Use this option for Auth0, Keycloak, or any other OpenID Connect-compatible provider.
+
+    ```text generic-oidc-example.conf
+    Provider: Generic OIDC
+    Client ID: [your-client-id]
+    Client Secret: [your-client-secret]
+    Discovery URL: https://your-provider.example.com/.well-known/openid-configuration
+    ```
+
+    The discovery URL must point to a valid OpenID Connect discovery document. NeoSC uses this endpoint to automatically retrieve token, authorization, and JWKS endpoints.
+  </Tab>
+</Tabs>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Access policies" icon="shield" href="/guides/access-policies">
+    Define which users and groups from your IdP can access specific resources.
+  </Card>
+  <Card title="Initial setup" icon="circle-play" href="/guides/initial-setup">
+    Return to the initial setup guide to finish configuring your network.
+  </Card>
+</CardGroup>

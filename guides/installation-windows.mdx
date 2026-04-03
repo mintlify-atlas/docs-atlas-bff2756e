@@ -1,0 +1,81 @@
+---
+title: 'Install on Windows'
+description: 'Install the NeoSC client on Windows using the installer, Chocolatey, or winget'
+---
+
+## System requirements
+
+| Component | Minimum |
+|-----------|---------|
+| CPU       | 2 cores |
+| RAM       | 2 GB    |
+| Disk      | 500 MB free space |
+| OS        | Windows 7 or later |
+
+## Installation
+
+Choose the installation method that suits your environment.
+
+<Tip>
+  On Windows 10 and 11, winget is the recommended method — it handles updates automatically and requires no additional tooling.
+</Tip>
+
+<Tabs>
+  <Tab title="Installer">
+    <Steps>
+      <Step title="Download the installer">
+        Go to [https://neosc.io/download](https://neosc.io/download) and download the latest `NeoSC-Setup.exe`.
+      </Step>
+
+      <Step title="Run the setup executable">
+        Double-click `NeoSC-Setup.exe` to launch the installation wizard.
+      </Step>
+
+      <Step title="Follow the installation wizard">
+        Work through each screen of the wizard to configure the installation.
+      </Step>
+
+      <Step title="Accept the license agreement">
+        Read and accept the NeoSC end-user license agreement to continue.
+      </Step>
+
+      <Step title="Choose an installation directory">
+        Select the destination folder. The default path is:
+
+        ```
+        C:\Program Files\NeoSC
+        ```
+      </Step>
+
+      <Step title="Complete the installation">
+        Click **Install** and wait for the process to finish. Click **Finish** to close the wizard.
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Chocolatey">
+    Run the following command in an elevated PowerShell or Command Prompt:
+
+    ```bash Chocolatey
+    choco install neosc
+    ```
+  </Tab>
+
+  <Tab title="winget">
+    Run the following command in PowerShell or Command Prompt:
+
+    ```bash winget
+    winget install NeoSC.NeoSC
+    ```
+  </Tab>
+</Tabs>
+
+## After installation
+
+Open your browser and navigate to the NeoSC dashboard:
+
+```
+https://localhost:8080
+```
+
+Log in or create an account to begin configuring your zero-trust network.

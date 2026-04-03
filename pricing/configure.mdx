@@ -1,0 +1,109 @@
+---
+title: 'Configure your desktop'
+description: Build a custom virtual desktop configuration and see pricing in real-time.
+---
+
+The WinDesk Cloud configurator lets you assemble a desktop exactly the way you need it. Every option updates the price summary instantly, so you always know what you'll pay before committing.
+
+<Tip>
+  Switching to **annual billing** saves you 20% across the entire configuration — base plan, OS, and all add-ons included.
+</Tip>
+
+## Walkthrough
+
+<Steps>
+  <Step title="Choose a base plan">
+    Pick the plan that matches your team size and security requirements.
+
+    | Plan       | Base price        | Users       |
+    | ---------- | ----------------- | ----------- |
+    | Starter    | $29 / desktop / mo | Up to 5    |
+    | Business   | $59 / desktop / mo | Up to 25   |
+    | Enterprise | $129 / desktop / mo | Unlimited  |
+
+    The plan sets the ceiling for the resources you can allocate. You can always upgrade later.
+  </Step>
+
+  <Step title="Set vCPU cores">
+    Use the slider to choose between **2 and 16 vCPU cores**. Start conservatively — you can scale up without reprovisioning the desktop.
+
+    Most knowledge-worker desktops perform well at 4 cores. Developer workloads and compilation tasks benefit from 8 or more.
+  </Step>
+
+  <Step title="Set RAM memory">
+    Choose between **4 GB and 64 GB** in 4 GB increments.
+
+    | Workload              | Recommended RAM |
+    | --------------------- | --------------- |
+    | Light productivity    | 4 – 8 GB        |
+    | Browser-heavy work    | 8 – 16 GB       |
+    | Development / IDEs    | 16 – 32 GB      |
+    | Data / ML workloads   | 32 – 64 GB      |
+  </Step>
+
+  <Step title="Set storage">
+    Choose between **60 GB and 500 GB** in 10 GB increments. Storage is SSD-backed in all regions.
+
+    If your team stores large files or media locally, provision extra headroom — resizing storage later requires a brief maintenance window.
+  </Step>
+
+  <Step title="Select a region">
+    Choose the data center closest to your users to minimize latency.
+
+    | Region                | Latency (approx.)  | Notes                              |
+    | --------------------- | ------------------ | ---------------------------------- |
+    | Mexico                | 5 ms               | Fastest for Latin America          |
+    | USA (Texas)           | 15 ms              | North America — 99.9% uptime SLA   |
+    | Europe (Frankfurt)    | 120 ms             | GDPR compliant                     |
+    | Bare Metal (OVH)      | Custom             | Maximum performance, dedicated hardware |
+
+    All regions run the same software stack and zero-trust security model. Pricing is the same in every region.
+  </Step>
+
+  <Step title="Choose an operating system">
+    All desktops support three OS options.
+
+    | OS              | Additional cost |
+    | --------------- | --------------- |
+    | Windows 11      | Included        |
+    | Ubuntu 22.04    | +$5 / mo        |
+    | macOS Sonoma    | +$15 / mo       |
+
+    The OS can be changed when reprovisioning a desktop. Existing data is preserved during an OS reinstall if you have backups enabled.
+  </Step>
+
+  <Step title="Add optional add-ons">
+    Add-ons extend the capabilities of any plan. Toggle each one independently — they can be added or removed at any time.
+
+    | Add-on            | Price     | Description                                  |
+    | ----------------- | --------- | -------------------------------------------- |
+    | Automated Backups | +$15 / mo | Daily backups with 30-day retention          |
+    | Advanced SSO      | +$25 / mo | SAML 2.0 and OIDC identity provider integration |
+    | Private Relay     | +$20 / mo | Dedicated relay servers for your organization |
+    | Security Suite    | +$30 / mo | MFA, DLP policies, and threat detection      |
+  </Step>
+
+  <Step title="Select billing period">
+    Choose **monthly** or **annual** billing.
+
+    - **Monthly** — pay each month, cancel anytime.
+    - **Annual** — pay once per year at a **20% discount** on the full configuration price.
+
+    Annual billing applies the discount to the base plan, OS surcharge, and all add-ons.
+  </Step>
+</Steps>
+
+<Note>
+  Enterprise customers can request a custom quote for configurations beyond what the configurator supports — including reserved capacity, dedicated nodes, and multi-region active-active setups. [Contact sales](mailto:sales@windesk.cloud) to get started.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Compare plans" icon="table" href="/pricing/compare">
+    Review the full feature matrix before finalizing your plan selection.
+  </Card>
+  <Card title="Pricing FAQ" icon="circle-question" href="/pricing/faq">
+    Answers to common billing, trial, and migration questions.
+  </Card>
+</CardGroup>

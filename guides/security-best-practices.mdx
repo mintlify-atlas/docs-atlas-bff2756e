@@ -1,0 +1,171 @@
+---
+title: "Security best practices"
+description: Recommended security configuration for your WinDesk Cloud deployment.
+---
+
+Securing your WinDesk Cloud deployment requires consistent configuration across authentication, access control, and network layers. Follow these practices to reduce your attack surface and maintain compliance.
+
+<Warning>
+  Disabling MFA is one of the most common and consequential security mistakes. Even in low-risk environments, MFA should remain enforced for all users — including administrators.
+</Warning>
+
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Enable multi-factor authentication" icon="shield">
+    MFA is the single most effective control for preventing unauthorized access. WinDesk Cloud supports authenticator apps (TOTP) and hardware security keys (FIDO2/WebAuthn).
+
+    **Configuration steps:**
+
+    1. Go to **Settings → Security → Authentication**.
+    2. Enable **Require MFA for all users**.
+    3. Set the enforcement grace period (recommended: 24 hours).
+    4. Choose allowed MFA methods:
+       - Authenticator apps: Google Authenticator, Authy, Microsoft Authenticator
+       - Hardware keys: YubiKey, Titan Security Key
+
+    **Recommended policy:**
+
+    ```text
+    mfa_required: true
+    mfa_methods: [totp, webauthn]
+    grace_period_hours: 24
+    bypass_allowed: false
+    ```
+
+    Disable recovery codes for privileged accounts and require re-authentication for sensitive operations such as policy changes or user provisioning.
+  </Accordion>
+
+  <Accordion title="Regular audits" icon="magnifying-glass">
+    Continuous monitoring and periodic review of access logs helps detect threats before they escalate. WinDesk Cloud generates immutable audit logs for all sessions, policy changes, and administrative actions.
+
+    **Audit schedule:**
+
+    - **Monthly:** Review all active user access; revoke stale accounts
+    - **Weekly:** Check for failed login attempts and unusual geographic access
+    - **Daily (automated):** Alert on policy changes and privilege escalations
+
+    **Key events to monitor:**
+
+    | Event type | Recommended action |
+    |---|---|
+    | Login from new country | Alert + require re-authentication |
+    | Policy change | Notify security team |
+    | Account locked out | Investigate within 1 hour |
+    | Admin privilege granted | Require approval workflow |
+
+    <Tip>
+      Use the audit log export feature to stream logs to your SIEM (Splunk, Datadog, AWS CloudWatch) for automated compliance reporting. Navigate to **Settings → Audit Logs → Export** to configure continuous export.
+    </Tip>
+
+    Retain audit logs for a minimum of 90 days (Business plan) or 1 year (Enterprise plan) to satisfy SOC 2 and HIPAA requirements.
+  </Accordion>
+
+  <Accordion title="Least privilege access" icon="lock">
+    Grant users and services only the permissions required for their specific role. WinDesk Cloud uses role-based access control (RBAC) to enforce this at the user, group, and resource level.
+
+    **RBAC role structure:**
+
+    ```text
+    Role: desktop-user
+    Permissions:
+      - desktops:connect (own desktops only)
+      - sessions:create
+      - files:read (designated shares only)
+
+    Role: team-admin
+    Permissions:
+      - desktops:manage (team desktops)
+      - users:invite
+      - policies:read
+
+    Role: org-admin
+    Permissions:
+      - all (scoped to organization)
+    ```
+
+    **Enforcement checklist:**
+
+    - Assign users to the lowest role that satisfies their job function
+    - Use group-based assignment — avoid per-user overrides
+    - Review access quarterly; revoke unused permissions immediately on role change or offboarding
+    - Separate production and staging environments with distinct roles
+    - Require approval workflows for elevated roles
+  </Accordion>
+
+  <Accordion title="Keep software updated" icon="arrow-up-circle">
+    Unpatched software is the leading entry point for exploitation. WinDesk Cloud publishes security patches on a rolling basis; critical patches are released out-of-band within 72 hours of CVE disclosure.
+
+    **Update strategy:**
+
+    1. **Enable automatic updates** in **Settings → System → Updates** for the management plane.
+    2. **Stage updates through environments:** apply to staging first, validate for 48 hours, then promote to production.
+    3. **Subscribe to release notes** at `releases.windesk.cloud` to track security-relevant changes.
+    4. **Pin minimum agent versions** in your access policies to block outdated clients:
+
+    ```text
+    policy: require-agent-version
+    min_version: "2.4.0"
+    action: deny_connection
+    ```
+
+    Monitor the NeoSC security advisory feed and configure alerts for any CVEs affecting your installed version.
+  </Accordion>
+
+  <Accordion title="Network segmentation" icon="network-wired">
+    Isolate networks by sensitivity level to contain lateral movement in the event of a compromise. WinDesk Cloud's zero-trust architecture enforces policy at the peer level, but proper segmentation adds defense-in-depth.
+
+    **Segmentation model:**
+
+    ```text
+    Network: production
+    Policy: strict
+    Allowed peers: production-servers, ops-team
+    MFA required: true
+    Session recording: enabled
+
+    Network: staging
+    Policy: standard
+    Allowed peers: engineering-team, ci-runners
+    MFA required: true
+    Session recording: disabled
+
+    Network: dev
+    Policy: relaxed
+    Allowed peers: dev-team
+    MFA required: false
+    ```
+
+    **Key principles:**
+
+    - Production resources must never be reachable from development networks
+    - Use separate access policies for each environment
+    - Apply strict egress rules on production networks — deny all traffic not explicitly permitted
+    - Isolate critical infrastructure (databases, key management) in dedicated networks with no direct user access
+    - Use relay servers for cross-region peer connectivity to avoid exposing internal routes
+  </Accordion>
+</AccordionGroup>
+
+## Compliance
+
+WinDesk Cloud is designed to support the following compliance frameworks. Controls vary by plan.
+
+| Framework | Scope | Plans |
+|---|---|---|
+| SOC 2 Type II | Security, availability, and confidentiality | Business, Enterprise |
+| GDPR | Data protection and privacy (EU) | All plans |
+| ISO 27001 | Information security management | Enterprise |
+| HIPAA | Healthcare data protection (BAA available) | Business, Enterprise |
+
+All audit logs, session recordings, and access records required for compliance reporting are retained automatically. For HIPAA deployments, contact your account manager to execute a Business Associate Agreement (BAA).
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Security overview" icon="shield-halved" href="/platform/security">
+    Learn about WinDesk Cloud's zero-trust architecture, encryption standards, and security certifications.
+  </Card>
+  <Card title="Access policies" icon="list-check" href="/guides/access-policies">
+    Configure user-based, device-based, time-based, and location-based access control policies.
+  </Card>
+</CardGroup>

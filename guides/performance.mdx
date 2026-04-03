@@ -1,0 +1,186 @@
+---
+title: "Performance optimization"
+description: Get the best performance from your WinDesk Cloud virtual desktops.
+---
+
+WinDesk Cloud performance depends on network configuration, region selection, and how resources are allocated to virtual desktops. This guide covers the key areas to tune for responsive, reliable desktop sessions.
+
+## Region selection
+
+Choosing the region closest to your users has the largest single impact on perceived performance. WinDesk Cloud operates in four regions with different latency profiles and compliance characteristics.
+
+| Region | Typical latency | Best for | Notes |
+|---|---|---|---|
+| Mexico | ~5 ms | Latin America | Fastest for LATAM users |
+| USA / Texas | ~15 ms | North America | 99.9% SLA guarantee |
+| Europe / Frankfurt | ~120 ms | Europe | GDPR compliant |
+| Bare Metal / OVH | Custom | Maximum throughput | Dedicated hardware, configurable latency |
+
+<Tip>
+  Placing your virtual desktops in the region closest to your users can reduce session latency by 40% or more compared to cross-continental deployments. For globally distributed teams, provision separate desktop pools per region rather than routing all traffic through a single datacenter.
+</Tip>
+
+## Optimization areas
+
+<AccordionGroup>
+  <Accordion title="Network configuration" icon="network-wired">
+    Network configuration is the highest-leverage tuning area. The WinDesk Cloud agent uses WireGuard-based tunnels; the following settings directly affect tunnel efficiency.
+
+    **Enable UDP transport:**
+
+    UDP provides lower overhead than TCP for interactive sessions. Ensure UDP is not blocked at the network boundary.
+
+    <Note>
+      UDP ports **51820–51830** must be open outbound for optimal WireGuard tunnel performance. If these ports are blocked, the agent falls back to TCP over port 443, which increases latency for interactive sessions.
+    </Note>
+
+    **Set the correct MTU:**
+
+    The recommended MTU for WinDesk Cloud tunnels is **1420 bytes**. This accounts for WireGuard encapsulation overhead and prevents fragmentation on most network paths.
+
+    ```bash
+    # Set MTU on the WinDesk Cloud interface (Linux)
+    ip link set wdc0 mtu 1420
+
+    # Verify current MTU
+    ip link show wdc0
+    ```
+
+    On Windows, update the interface MTU via PowerShell:
+
+    ```powershell
+    # Find the WinDesk Cloud adapter index
+    Get-NetAdapter | Where-Object { $_.InterfaceDescription -like "*WinDesk*" }
+
+    # Set MTU (replace <index> with the adapter index)
+    netsh interface ipv4 set subinterface <index> mtu=1420 store=persistent
+    ```
+
+    **Use relay servers for high-latency paths:**
+
+    If direct peer-to-peer connections cannot be established (symmetric NAT, strict firewall), configure relay servers in **Settings → Network → Relay Servers**. Place relay servers in the same region as your desktops.
+  </Accordion>
+
+  <Accordion title="Peer optimization" icon="arrows-to-dot">
+    Peers (agents installed on desktops and servers) can be tuned for more efficient connection establishment and lower session overhead.
+
+    **Distribute peers across regions:**
+
+    Assign peers to the nearest region node to minimize hop count. Avoid routing peers in Frankfurt through the Texas management server, for example.
+
+    **Use local DNS servers:**
+
+    Configure peers to use a DNS server in the same region rather than resolving through the management plane. This avoids adding DNS round-trip time to every connection.
+
+    ```text
+    # neosc peer configuration
+    [Peer]
+    dns_servers = ["10.0.0.53", "10.0.0.54"]  # local resolvers
+    search_domains = ["corp.example.com"]
+    ```
+
+    **Enable connection pooling:**
+
+    Connection pooling keeps established tunnels warm between sessions, eliminating handshake overhead on reconnect. Enable it in **Settings → Network → Connection Pooling**.
+
+    ```text
+    connection_pooling: enabled
+    idle_timeout_seconds: 300
+    max_idle_connections: 10
+    ```
+  </Accordion>
+
+  <Accordion title="Monitoring" icon="chart-line">
+    Proactive monitoring lets you catch performance degradation before users report it.
+
+    **Key metrics to track:**
+
+    | Metric | Warning threshold | Critical threshold |
+    |---|---|---|
+    | Session latency | > 100 ms | > 250 ms |
+    | Bandwidth utilization | > 70% | > 90% |
+    | Packet loss | > 0.5% | > 2% |
+    | CPU utilization | > 70% sustained | > 90% sustained |
+    | Connection establishment time | > 3 s | > 10 s |
+
+    **Set up alerts:**
+
+    Navigate to **Dashboard → Alerts → Create Alert** to configure notifications for any of the above thresholds. Alerts can be sent via email, Slack webhook, or PagerDuty integration.
+
+    **Bandwidth monitoring:**
+
+    Monitor per-user and per-desktop bandwidth consumption weekly. Desktops with unusually high egress may indicate misconfigured applications syncing large datasets over the tunnel rather than directly.
+  </Accordion>
+
+  <Accordion title="Resource management" icon="server">
+    Correctly sizing virtual desktop resources prevents CPU and memory contention that manifests as input lag and slow application response.
+
+    **Baseline resource allocations by workload:**
+
+    | Workload type | vCPU | RAM | Storage |
+    |---|---|---|---|
+    | Knowledge worker (Office, browser) | 2 | 4 GB | 60 GB |
+    | Developer (IDE, build tools) | 4 | 8 GB | 100 GB |
+    | Power user (design, video) | 8 | 16 GB | 250 GB |
+    | Data analyst (large datasets) | 8 | 32 GB | 500 GB |
+
+    **Storage hygiene:**
+
+    Disk I/O saturation causes the same symptoms as CPU contention. Schedule regular log cleanup to keep system disks below 70% utilization.
+
+    ```powershell
+    # Clean Windows event logs and temp files (run monthly)
+    Clear-EventLog -LogName Application, System, Security
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+    cleanmgr /sagerun:1
+    ```
+
+    **Automated disk alerting:**
+
+    Set a disk-usage alert at 75% to give yourself time to act before storage pressure degrades performance.
+  </Accordion>
+
+  <Accordion title="Scaling" icon="arrows-up-to-line">
+    As your deployment grows, horizontal scaling of management infrastructure prevents the management plane from becoming a bottleneck.
+
+    **Management server redundancy:**
+
+    Deploy at least two management servers in active-active configuration for any production deployment with more than 25 desktops.
+
+    ```text
+    # Management server cluster example
+    [cluster]
+    nodes = [
+      "mgmt-us-1.corp.example.com",
+      "mgmt-us-2.corp.example.com"
+    ]
+    load_balancing = "round_robin"
+    health_check_interval_seconds = 10
+    ```
+
+    **Load distribution across regions:**
+
+    Route desktop connections to the management server in the same region. Cross-region management traffic adds latency to authentication and policy evaluation.
+
+    **Capacity planning thresholds:**
+
+    | Management server size | Max desktops | Max concurrent sessions |
+    |---|---|---|
+    | 2 vCPU / 4 GB | 50 | 25 |
+    | 4 vCPU / 8 GB | 200 | 100 |
+    | 8 vCPU / 16 GB | 1,000 | 500 |
+    | 16 vCPU / 32 GB | 5,000 | 2,500 |
+
+    Monitor management server CPU and memory at 5-minute intervals. Scale horizontally when sustained CPU utilization exceeds 60% during peak hours.
+  </Accordion>
+</AccordionGroup>
+
+## Quick reference
+
+| Setting | Recommended value |
+|---|---|
+| UDP port range | 51820–51830 |
+| MTU | 1420 bytes |
+| Connection pool idle timeout | 300 seconds |
+| Disk usage alert threshold | 75% |
+| Management server CPU scale trigger | 60% sustained |

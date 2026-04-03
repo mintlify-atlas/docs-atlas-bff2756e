@@ -1,80 +1,151 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Quick start"
+description: "Get your first WinDesk Cloud virtual desktop running in minutes — from sign-up to active connection."
 ---
 
-## Get started in three steps
+This guide walks you through everything from creating your account to connecting to your virtual desktop. The entire process takes approximately 8 minutes after checkout.
 
-Get your documentation site running locally and make your first customization.
+<Tip>
+  Choosing annual billing saves 20% compared to monthly. You can switch billing cycles at any time from your account settings.
+</Tip>
 
-### Step 1: Set up your local environment
+## Steps
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+<Steps>
 
-### Step 2: Deploy your changes
+  <Step title="Start your free trial">
+    Go to the WinDesk Cloud sign-up page and create your account. No credit card is required to start.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    You receive a **72-hour free trial** on any plan, giving you full access to your chosen desktop environment before you're billed.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    <Note>
+      WinDesk Cloud is currently in beta. Trial desktops have the same performance and security as paid plans.
+    </Note>
+  </Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="Choose a plan">
+    Select the plan that fits your workload. All plans include Windows 11, zero-trust network access, and the 8-minute provisioning SLA.
 
-### Step 3: Go live
+    | Plan | Price | vCPU | RAM | Storage |
+    |---|---|---|---|---|
+    | Starter | $29/mo | 2 cores | 4 GB | 60 GB |
+    | Business | $59/mo | 4 cores | 8 GB | 100 GB |
+    | Enterprise | $129/mo | 8 cores | 16 GB | 250 GB |
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+    The **Business** plan is the most popular choice for teams needing a capable everyday desktop. If you need more resources than the Enterprise plan offers, you can increase them in the configurator.
+  </Step>
+
+  <Step title="Configure your desktop">
+    After selecting a plan, the interactive configurator at [/configure](/pricing/configure) lets you fine-tune your hardware resources and deployment region.
+
+    **Hardware resources**
+
+    Drag the sliders to set your preferred values:
+
+    | Resource | Minimum | Maximum |
+    |---|---|---|
+    | vCPU | 2 cores | 16 cores |
+    | RAM | 4 GB | 64 GB |
+    | Storage | 60 GB | 500 GB |
+
+    **Deployment region**
+
+    Choose the region closest to your users to minimize latency:
+
+    - 🇲🇽 Mexico
+    - 🇺🇸 USA
+    - 🇪🇺 Europe
+    - Bare Metal (dedicated hardware, available on Enterprise)
+  </Step>
+
+  <Step title="Choose your operating system">
+    Select the operating system for your virtual desktop. The OS is installed automatically during provisioning.
+
+    | OS | Price | Notes |
+    |---|---|---|
+    | Windows 11 | Included | Full desktop, Office-compatible, RDP access |
+    | Ubuntu 22.04 | +$5/mo | Linux environment with dev tools, noVNC access |
+    | macOS Sonoma | +$15/mo | macOS environment, browser-based access |
+  </Step>
+
+  <Step title="Add optional add-ons">
+    Enhance your desktop with optional services. Add-ons can be added or removed at any time from your dashboard.
+
+    | Add-on | Price | Description |
+    |---|---|---|
+    | Automated Backups | +$15/mo | Daily snapshots with one-click restore |
+    | Advanced SSO | +$25/mo | Connect Okta, Azure AD, Google Workspace, or any OIDC provider |
+    | Private Relay | +$20/mo | Dedicated relay node for lower-latency connections |
+    | Security Suite | +$30/mo | Extended audit logging, IP allowlisting, and session recording |
+  </Step>
+
+  <Step title="Complete checkout">
+    Review your order summary and complete payment. WinDesk Cloud uses Stripe for secure payment processing.
+
+    After checkout, provisioning starts automatically:
+
+    1. Virtual machine is created in your selected region
+    2. Operating system is installed and configured
+    3. Zero-trust network tunnel is established
+    4. Connection credentials are delivered to your account
+
+    Your desktop will be ready in approximately **8 minutes**.
+  </Step>
+
+  <Step title="Connect to your desktop">
+    Once provisioning is complete, open your dashboard and click **Connect**. You can access your desktop three ways:
+
+    **Browser (recommended for first access)**
+
+    Click the connection link in your dashboard. Your desktop opens in a new browser tab — no software installation required.
+
+    **NeoSC client (recommended for daily use)**
+
+    Install the NeoSC client for your platform to get the best performance and lowest latency:
+
+    <CodeGroup>
+
+    ```bash Linux (Ubuntu / Debian)
+    sudo apt-get update && sudo apt-get install -y curl gnupg lsb-release
+    curl https://repo.neosc.io/ubuntu/KEY.gpg | sudo apt-key add -
+    echo "deb https://repo.neosc.io/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/neosc.list
+    sudo apt-get update && sudo apt-get install -y neosc
+    ```
+
+    ```bash macOS (Homebrew)
+    brew tap neosc/tap
+    brew install neosc
+    brew services start neosc
+    ```
+
+    ```bash Windows (winget)
+    winget install NeoSC.NeoSC
+    ```
+
+    </CodeGroup>
+
+    See the [installation guides](/guides/installation-linux) for full platform-specific instructions.
+
+    **RDP (Windows desktops only)**
+
+    Use any RDP client with the credentials provided in your dashboard. The connection is tunneled securely through the zero-trust network layer — no firewall changes required.
+  </Step>
+
+</Steps>
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Platform overview" icon="server" href="/platform/overview">
+    Learn about monitoring, backups, auto-scaling, and desktop management.
+  </Card>
+  <Card title="Security" icon="shield" href="/platform/security">
+    Understand the zero-trust security model, MFA, and compliance certifications.
+  </Card>
+  <Card title="Identity providers" icon="key" href="/guides/identity-providers">
+    Connect Okta, Azure AD, or Google Workspace for single sign-on.
+  </Card>
+  <Card title="Compare plans" icon="tag" href="/pricing/compare">
+    Detailed feature comparison across Starter, Business, and Enterprise.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

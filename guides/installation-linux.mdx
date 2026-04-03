@@ -1,0 +1,83 @@
+---
+title: 'Install on Linux'
+description: 'Install the NeoSC client on Ubuntu, Debian, CentOS, or RHEL'
+---
+
+## System requirements
+
+Before installing, ensure your system meets the following requirements:
+
+| Component | Minimum |
+|-----------|---------|
+| CPU       | 2 cores |
+| RAM       | 2 GB    |
+| Disk      | 500 MB free space |
+| OS        | Ubuntu 16.04+ / CentOS 7+ |
+
+**Network requirements:**
+
+- Outbound HTTPS on port 443
+- UDP ports 51820–51830 (configurable)
+
+<Note>
+  NAT traversal support is recommended for better peer-to-peer connection performance, especially across networks with strict firewalls.
+</Note>
+
+## Installation
+
+<Steps>
+  <Step title="Add the NeoSC repository">
+    Add the NeoSC package repository for your distribution.
+
+    <CodeGroup>
+
+    ```bash Ubuntu / Debian
+    sudo apt-get update
+    sudo apt-get install -y curl gnupg lsb-release
+    curl https://repo.neosc.io/ubuntu/KEY.gpg | sudo apt-key add -
+    echo "deb https://repo.neosc.io/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/neosc.list
+    ```
+
+    ```bash CentOS / RHEL
+    sudo yum install -y curl
+    sudo rpm --import https://repo.neosc.io/centos/KEY.gpg
+    sudo tee /etc/yum.repos.d/neosc.repo > /dev/null <<EOF
+    [neosc]
+    name=NeoSC Repository
+    baseurl=https://repo.neosc.io/centos
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://repo.neosc.io/centos/KEY.gpg
+    EOF
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Install NeoSC">
+    Install the NeoSC package using your distribution's package manager.
+
+    <CodeGroup>
+
+    ```bash Ubuntu / Debian
+    sudo apt-get update
+    sudo apt-get install -y neosc
+    ```
+
+    ```bash CentOS / RHEL
+    sudo yum install -y neosc
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Access the dashboard">
+    Once installation is complete, open your browser and navigate to:
+
+    ```
+    https://localhost:8080
+    ```
+
+    Log in or create an account to begin configuring your zero-trust network.
+  </Step>
+</Steps>

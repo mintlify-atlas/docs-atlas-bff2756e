@@ -1,0 +1,70 @@
+---
+title: 'Install on macOS'
+description: 'Install the NeoSC client on macOS using Homebrew or the DMG installer'
+---
+
+## System requirements
+
+| Component | Minimum |
+|-----------|---------|
+| CPU       | 2 cores |
+| RAM       | 2 GB    |
+| Disk      | 500 MB free space |
+| OS        | macOS 10.12 (Sierra) or later |
+
+## Installation
+
+<Tabs>
+  <Tab title="Homebrew">
+    Add the NeoSC tap and install the package:
+
+    ```bash
+    brew tap neosc/tap
+    brew install neosc
+    ```
+
+    Then start the NeoSC service:
+
+    ```bash
+    brew services start neosc
+    ```
+  </Tab>
+
+  <Tab title="DMG installer">
+    <Steps>
+      <Step title="Download the DMG">
+        Go to [https://neosc.io/download](https://neosc.io/download) and download `NeoSC.dmg`.
+      </Step>
+
+      <Step title="Open the DMG file">
+        Double-click `NeoSC.dmg` to mount the disk image.
+      </Step>
+
+      <Step title="Drag NeoSC to Applications">
+        In the Finder window that opens, drag the NeoSC icon into the **Applications** folder.
+      </Step>
+
+      <Step title="Launch NeoSC">
+        Open **Applications** and double-click **NeoSC** to launch it.
+      </Step>
+
+      <Step title="Grant necessary permissions">
+        Follow any system prompts to allow NeoSC the permissions it needs to operate.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+<Note>
+  On first launch, macOS may prompt you to grant network permissions. Allow these when asked — NeoSC requires them to establish secure peer-to-peer connections.
+</Note>
+
+## After installation
+
+Open your browser and navigate to the NeoSC dashboard:
+
+```
+https://localhost:8080
+```
+
+Log in or create an account to begin configuring your zero-trust network.

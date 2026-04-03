@@ -1,0 +1,75 @@
+---
+title: "Platform overview"
+description: "Enterprise-grade virtual desktop infrastructure for modern teams"
+keywords: ["virtual desktop", "VDI", "WinDesk Cloud", "zero trust", "cloud desktop"]
+---
+
+WinDesk Cloud is a comprehensive virtual desktop platform that combines the power of Windows desktops with enterprise-grade security and ease of management. Access your Windows environment from anywhere, on any device, with zero-trust security built into every layer.
+
+## Key benefits
+
+<CardGroup cols={2}>
+  <Card title="Global access" icon="globe">
+    Access your desktop from any browser on any device — laptop, tablet, or thin client — without installing software or configuring VPN clients. HTML5-based connections work from any network, anywhere in the world.
+  </Card>
+  <Card title="Zero trust security" icon="shield">
+    Every access request is cryptographically verified before a connection is established. WinDesk Cloud never implicitly trusts any user or device, enforcing continuous verification across all sessions.
+  </Card>
+  <Card title="Instant provisioning" icon="zap">
+    Deploy new desktops in approximately 8 minutes, not hours. Automated provisioning pipelines spin up fully configured Windows environments on demand, eliminating the manual setup that traditional VDI requires.
+  </Card>
+  <Card title="Scalable infrastructure" icon="server">
+    Grow from a single desktop to 10,000 or more without re-architecting your deployment. The platform scales horizontally to meet demand, with no single points of failure in the network path.
+  </Card>
+</CardGroup>
+
+## What WinDesk Cloud is
+
+WinDesk Cloud delivers Windows desktops as a managed cloud service. Each desktop is a dedicated virtual machine running in a regional data center, accessible over an encrypted session from any browser.
+
+The platform has two distinct layers that work together:
+
+- **Cloud VM layer** — dedicated virtual machines with configurable CPU, RAM, and storage resources. Each desktop runs a full Windows environment and is isolated from other tenants at the hypervisor level.
+- **NeoSC zero-trust network overlay** — a cryptographic network fabric that brokers every connection between users and their desktops. There is no centralized gateway or VPN concentrator. Instead, NeoSC establishes direct peer-to-peer tunnels between authenticated endpoints, with the Control Plane coordinating identity and access policy without sitting in the data path.
+
+This architecture eliminates the bottlenecks and single points of failure that affect traditional remote desktop and VPN infrastructure. Users connect directly to their desktop with low latency, and the network path never routes through a shared gateway that could become a target or a chokepoint.
+
+## How it works
+
+```text
+User browser  →  NeoSC identity verification  →  Encrypted P2P tunnel  →  Windows VM
+```
+
+1. A user opens their browser and navigates to their organization's WinDesk Cloud portal.
+2. NeoSC verifies the user's cryptographic identity and evaluates access policy in real time.
+3. If the request is authorized, NeoSC establishes a direct encrypted tunnel to the user's assigned desktop VM.
+4. The Windows desktop renders in the browser over an optimized HTML5 session — no plugins or client software required.
+5. Every action during the session is logged for audit and compliance purposes.
+
+<Info>
+  WinDesk Cloud supports Windows 11 desktops out of the box. Contact sales for information about custom OS images and bring-your-own-license (BYOL) configurations.
+</Info>
+
+## Architecture comparison
+
+NeoSC's zero-trust overlay replaces legacy VPN infrastructure with a fundamentally different network model:
+
+| | Legacy infrastructure | WinDesk Cloud (NeoSC) |
+|---|---|---|
+| **Network path** | All traffic routed through a central gateway | Direct peer-to-peer encrypted tunnels |
+| **Authentication** | Gateway credentials, shared secrets | Cryptographic identity per device and user |
+| **Failure modes** | Central gateway is a single point of failure | No centralized bottleneck; auto-failover |
+| **Configuration** | Manual firewall rules, complex routing | Policy-driven, managed from the control plane |
+| **Latency** | Higher — traffic detours through gateway | Lower — direct path to the desktop VM |
+| **Scalability** | Gateway capacity limits throughput | Scales with the number of endpoints |
+
+## Explore the platform
+
+<CardGroup cols={2}>
+  <Card title="Platform features" icon="cpu" href="/platform/features">
+    Configurable resources, monitoring, backups, auto-scaling, API access, and a full plan comparison table.
+  </Card>
+  <Card title="Security & compliance" icon="lock" href="/platform/security">
+    Zero-trust architecture, encryption standards, compliance certifications, and advanced security controls.
+  </Card>
+</CardGroup>

@@ -1,0 +1,111 @@
+---
+title: "Secure remote access"
+description: "Enable distributed teams to access internal resources securely from anywhere, without exposing your network to the internet."
+keywords: ["remote access", "zero trust", "VPN alternative", "distributed teams", "secure access"]
+---
+
+Allow employees, contractors, and partners to securely reach internal applications and infrastructure from anywhere in the world. NeoSC replaces complex VPN infrastructure with automatic peer-to-peer connections that are faster, easier to audit, and built on zero-trust principles.
+
+## Real-world scenario: Distributed Development Team
+
+A software company with developers across 5 countries needed secure access to internal Git repositories, CI/CD pipelines, and staging environments — all without a centralized VPN gateway slowing everyone down.
+
+### Challenge
+
+Traditional VPN solutions introduced three compounding problems for this team:
+
+- **Complexity** — provisioning and maintaining VPN clients across platforms took weeks per new hire
+- **Latency** — global teams routed all traffic through a central gateway, adding significant round-trip delay
+- **Auditability** — access logs were fragmented across multiple systems with no unified view
+
+### Solution
+
+NeoSC established automatic peer-to-peer connections between each developer's device and the internal resources they were authorized to reach. No central gateway. No manual tunnel configuration. Access policies were enforced at the network level, and every connection event was logged automatically.
+
+<Note>
+  NeoSC's peer-to-peer architecture means traffic travels the shortest path between device and resource — not through a central bottleneck.
+</Note>
+
+### Results
+
+| Metric | Before | After |
+|---|---|---|
+| Team onboarding time | 2 weeks | 30 minutes |
+| Access latency | Baseline | 70% reduction |
+| Audit trail coverage | Partial | 100% of access events |
+| Security breaches (12 months) | — | Zero |
+
+## How to set up secure remote access
+
+<Steps>
+  <Step title="Create your WinDesk Cloud organization">
+    Sign in to the WinDesk Cloud console and create a new organization. This is the top-level container for your users, devices, and access policies.
+  </Step>
+  <Step title="Connect your identity provider">
+    Integrate with your existing IdP — Okta, Azure AD, or Google Workspace. NeoSC syncs users and groups automatically, so you don't manage a separate user directory.
+  </Step>
+  <Step title="Deploy the NeoSC client">
+    Install the NeoSC agent on each device that needs access. The agent is available for Windows, macOS, Linux, iOS, and Android. Deployment can be automated via MDM for larger teams.
+  </Step>
+  <Step title="Define access policies">
+    Create policies that specify which users or groups can reach which resources. Policies evaluate user identity, device compliance posture, and network context before granting access.
+
+    <Tip>
+      Start with broad group-level policies and refine to resource-level rules as you understand your traffic patterns.
+    </Tip>
+  </Step>
+  <Step title="Enforce device compliance">
+    Enable posture checks to require that devices meet minimum security requirements — such as disk encryption, OS patch level, and screen lock — before access is granted.
+  </Step>
+  <Step title="Review access logs">
+    Open the Analytics dashboard to see a real-time log of every access event: who connected, from which device, to which resource, and at what time. Set up alerts for unusual patterns.
+  </Step>
+</Steps>
+
+## Key benefits
+
+<CardGroup cols={2}>
+  <Card title="Zero trust security" icon="shield-check">
+    Every access request is authenticated and authorized regardless of where the user is located. Network location is never treated as a proxy for trust.
+  </Card>
+  <Card title="Device compliance" icon="laptop">
+    Posture checks run before access is granted. Devices that fail compliance checks — missing patches, disabled encryption, no screen lock — are blocked automatically.
+  </Card>
+  <Card title="Granular access control" icon="sliders">
+    Policies are evaluated on user identity, group membership, device state, and network context. Grant access to exactly the resources each role needs — nothing more.
+  </Card>
+  <Card title="Seamless IdP integration" icon="plug">
+    Works with your existing identity provider: Okta, Azure AD, and Google Workspace. Users authenticate once and access follows them across devices and locations.
+  </Card>
+</CardGroup>
+
+## Key features
+
+- **Multi-platform agent** — Windows, macOS, Linux, iOS, and Android
+- **Automatic peer-to-peer connections** — no VPN gateway required, traffic takes the shortest path
+- **MFA and device posture enforcement** — layered controls before any access is granted
+- **Real-time access logs and analytics** — unified audit trail with 100% event coverage
+- **Automatic network segmentation** — resources are isolated by policy; lateral movement is blocked by default
+
+<AccordionGroup>
+  <Accordion title="How does NeoSC compare to a traditional VPN?" icon="circle-question">
+    Traditional VPNs route all traffic through a central gateway, which creates a latency bottleneck and a high-value attack target. NeoSC uses direct peer-to-peer connections between authorized devices and resources, so there is no single point of failure and no gateway to overload. Access is granted per-resource, not per-network — so a compromised device cannot reach resources it was never authorized to access.
+  </Accordion>
+  <Accordion title="What happens if a device fails a posture check?" icon="circle-question">
+    Access is denied at the network level. The user sees a notification explaining which compliance requirement failed and how to remediate it. Administrators receive an alert and can view the failed check in the compliance dashboard.
+  </Accordion>
+  <Accordion title="Can contractors and partners get access without joining the IdP?" icon="circle-question">
+    Yes. NeoSC supports guest access policies that allow external users to authenticate via email-based one-time codes, without being provisioned in your primary identity provider. Access for guest accounts can be scoped to specific resources and set to expire automatically.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Initial setup guide" icon="rocket" href="/guides/initial-setup">
+    Deploy NeoSC for your team step by step, from organization creation to your first connected device.
+  </Card>
+  <Card title="Access policies" icon="shield" href="/guides/access-policies">
+    Learn how to write policies that enforce least-privilege access across users, devices, and resources.
+  </Card>
+</CardGroup>

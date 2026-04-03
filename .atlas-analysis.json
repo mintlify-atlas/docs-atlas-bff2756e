@@ -1,0 +1,113 @@
+{
+  "projectType": "saas",
+  "projectName": "NeoSC / WinDesk Cloud",
+  "projectDescription": "A full-stack SaaS platform offering virtual Windows desktops in the cloud with zero-trust network security, instant provisioning, and multi-region support.",
+  "theme": "luma",
+  "primaryColor": "#a855f7",
+  "lightColor": "#d8b4fe",
+  "darkColor": "#6b21a8",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Overview",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "demo"
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "platform/overview",
+              "platform/features",
+              "platform/security"
+            ]
+          },
+          {
+            "group": "Use Cases",
+            "pages": [
+              "use-cases/remote-access",
+              "use-cases/site-to-site"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Installation",
+            "pages": [
+              "guides/installation-linux",
+              "guides/installation-windows",
+              "guides/installation-macos"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "guides/initial-setup",
+              "guides/identity-providers",
+              "guides/access-policies"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "guides/security-best-practices",
+              "guides/performance"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Pricing",
+        "groups": [
+          {
+            "group": "Plans",
+            "pages": [
+              "pricing/overview",
+              "pricing/compare",
+              "pricing/configure"
+            ]
+          },
+          {
+            "group": "FAQ",
+            "pages": [
+              "pricing/faq"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Virtual Windows desktops provisioned in under 8 minutes",
+    "Zero-trust security architecture with cryptographic verification",
+    "Configurable vCPU (2-16 cores), RAM (4-64GB), and storage (60-500GB)",
+    "Multi-region support: Mexico, USA, Europe, and Bare Metal (OVH)",
+    "SSO integration with Okta, Azure AD, Google Workspace, and OIDC",
+    "Automated backups with configurable retention",
+    "Multi-language support (EN, ES, FR, DE, PT)",
+    "Real-time pricing configurator with monthly/annual billing",
+    "Dark/light theme switching",
+    "Role-based access control (RBAC) and audit logging"
+  ],
+  "publicApiSurface": [
+    "GET / — Home marketing page",
+    "GET /pricing — Pricing plans (Starter $29, Business $59, Enterprise $129/mo)",
+    "GET /platform — Platform overview, features, and security sections",
+    "GET /use-cases — Secure Remote Access and Site-to-Site VPN scenarios",
+    "GET /docs — Documentation with installation guides and configuration",
+    "GET /configure — Interactive desktop configurator with real-time pricing",
+    "GET /compare — Side-by-side plan comparison table",
+    "GET /demo — Live demo environment selector (Windows 11, Ubuntu, VS Code)",
+    "useConfiguratorStore — Zustand store for plan/vCPU/RAM/disk/region/addons state",
+    "LanguageContext — Multi-language provider (en, es, fr, de, pt)",
+    "ThemeContext — Dark/light theme provider"
+  ]
+}

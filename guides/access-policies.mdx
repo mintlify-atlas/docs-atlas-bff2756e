@@ -1,0 +1,138 @@
+---
+title: "Access policies"
+description: Control which users and devices can access which resources.
+---
+
+Access policies are the primary mechanism for enforcing zero-trust security in NeoSC WinDesk Cloud. Each policy defines a source (who is requesting access), a destination (what they are trying to reach), and the conditions under which access is granted or denied.
+
+<Warning>
+  Follow the principle of least privilege: grant only the minimum access needed for each user or group to do their job. Overly permissive policies are one of the most common causes of security incidents. Review and tighten policies regularly.
+</Warning>
+
+## Policy types
+
+NeoSC supports four types of access policy conditions, which can be combined within a single policy:
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **User-based** | Grant access based on user identity or group membership | Allow the `Engineering` group |
+| **Device-based** | Require specific device compliance before granting access | Allow only managed, enrolled devices |
+| **Time-based** | Restrict access to a defined time window | Allow access 9 AM – 6 PM UTC only |
+| **Location-based** | Control access based on geographic location or IP range | Allow only from office IP ranges |
+
+## Policy structure
+
+Every policy follows this structure:
+
+```text policy-example.conf
+Name: Allow Engineering to Database
+Source: engineering-group
+Destination: database-subnet
+Protocol: TCP
+Port: 5432
+Action: Allow
+```
+
+- **Name** — a human-readable label for the policy
+- **Source** — the user, group, or device initiating the request
+- **Destination** — the resource, subnet, or service being accessed
+- **Protocol** — the network protocol (`TCP`, `UDP`, or `Any`)
+- **Port** — the port number or range (leave blank to match all ports)
+- **Action** — `Allow` or `Deny`
+
+## Creating a policy
+
+<Steps>
+  <Step title="Open access control">
+    In the NeoSC dashboard, go to **Policies → Access Control**.
+  </Step>
+
+  <Step title="Create a new policy">
+    Click **Create Policy** to open the policy builder.
+  </Step>
+
+  <Step title="Set the source">
+    Choose the source for this policy — a specific user, a group from your identity provider, or a device tag. For example, select the `engineering` group synced from Okta or Azure AD.
+  </Step>
+
+  <Step title="Set the destination">
+    Choose the destination resource or subnet. You can select a named resource (such as `database-server`) or a CIDR subnet (such as `10.0.1.0/24`).
+  </Step>
+
+  <Step title="Configure conditions">
+    Optionally add conditions to restrict when and how the policy applies:
+
+    - **Device compliance** — require the device to be enrolled and passing health checks
+    - **Time window** — enter a start and end time in UTC (for example, `09:00–18:00`)
+    - **Location** — enter allowed IP ranges or geographic regions
+  </Step>
+
+  <Step title="Review and save">
+    Review the policy summary, confirm the source, destination, protocol, port, and action, then click **Save Policy**. The policy takes effect immediately.
+  </Step>
+</Steps>
+
+## Policy examples
+
+<AccordionGroup>
+  <Accordion title="Allow engineers to access the production database">
+    Grants the `Engineering` IdP group TCP access to port 5432 on the database subnet, but only from enrolled, managed devices during business hours.
+
+    ```text engineering-db-policy.conf
+    Name: Allow Engineering to Database
+    Source: engineering-group
+    Destination: database-subnet
+    Protocol: TCP
+    Port: 5432
+    Action: Allow
+    Conditions:
+      Device: managed-only
+      Time: 09:00–18:00 UTC
+    ```
+
+    This policy prevents database access from personal or non-enrolled devices, and blocks access outside working hours.
+  </Accordion>
+
+  <Accordion title="Restrict admin panel to office IP ranges only">
+    Limits access to the internal admin panel to requests originating from the corporate office IP ranges.
+
+    ```text admin-location-policy.conf
+    Name: Office-Only Admin Access
+    Source: admins-group
+    Destination: admin-panel
+    Protocol: TCP
+    Port: 443
+    Action: Allow
+    Conditions:
+      Location: 203.0.113.0/24, 198.51.100.0/24
+    ```
+
+    All requests from outside the listed CIDR ranges are denied, even for users in the `admins` group.
+  </Accordion>
+
+  <Accordion title="Block all access to a decommissioned resource">
+    An explicit deny policy overrides any allow policies that might otherwise match the destination.
+
+    ```text decommission-deny-policy.conf
+    Name: Block Legacy API Server
+    Source: *
+    Destination: legacy-api-server
+    Protocol: Any
+    Port: Any
+    Action: Deny
+    ```
+
+    Use deny policies when retiring resources to ensure no residual access paths remain active.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Identity providers" icon="key" href="/guides/identity-providers">
+    Connect your IdP so NeoSC can sync users and groups for use in policy sources.
+  </Card>
+  <Card title="Initial setup" icon="circle-play" href="/guides/initial-setup">
+    Return to the initial setup guide to finish configuring your network.
+  </Card>
+</CardGroup>

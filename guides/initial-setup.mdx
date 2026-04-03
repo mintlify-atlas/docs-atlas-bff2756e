@@ -1,0 +1,57 @@
+---
+title: "Initial setup"
+description: Configure NeoSC WinDesk Cloud after installation.
+---
+
+After installing NeoSC, complete the following steps to create your first network and connect your devices.
+
+<Note>
+  The dashboard is also accessible via the NeoSC system tray icon — you do not need to open a browser manually.
+</Note>
+
+<Steps>
+  <Step title="Open the NeoSC dashboard">
+    Navigate to [https://localhost:8080](https://localhost:8080) in your browser, or click the NeoSC icon in the system tray to open the dashboard directly.
+  </Step>
+
+  <Step title="Create an account">
+    Sign up using your email address or an SSO provider supported by your organization. After registering:
+
+    1. Verify your email address using the link sent to your inbox.
+    2. Set up two-factor authentication.
+
+    <Tip>
+      Set up two-factor authentication immediately after creating your account. Using an authenticator app or hardware key significantly reduces the risk of unauthorized access.
+    </Tip>
+  </Step>
+
+  <Step title="Create your first network">
+    Once logged in, you will be prompted to create a network:
+
+    1. Enter a descriptive **Name** for the network (for example, `Production Network`).
+    2. Add an optional **Description** to identify the network's purpose.
+    3. Click **Create Network**.
+  </Step>
+
+  <Step title="Add peers">
+    With your network created, add the devices that should be part of it:
+
+    1. Go to the **Peers** section in the sidebar.
+    2. Click **Add Peer**.
+    3. Select the peer type: **Linux**, **Windows**, **macOS**, or **Mobile**.
+    4. Download the NeoSC agent for the target device and follow the on-screen installation instructions.
+
+    Repeat this process for each device you want to connect to the network.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Identity providers" icon="key" href="/guides/identity-providers">
+    Connect NeoSC to your SSO provider — Okta, Azure AD, Google Workspace, and more — to centralize authentication.
+  </Card>
+  <Card title="Access policies" icon="shield" href="/guides/access-policies">
+    Control which users and devices can reach which resources using granular access policies.
+  </Card>
+</CardGroup>
